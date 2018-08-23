@@ -2,9 +2,9 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
  <title>ossifier.github.io</title>
- <link href="http://localhost:4000/atom.xml" rel="self"/>
- <link href="http://localhost:4000/"/>
- <updated>2018-08-23T17:12:00+05:30</updated>
+ <link href="http://localhost:4000/Advance_lane_detection/atom.xml" rel="self"/>
+ <link href="http://localhost:4000/Advance_lane_detection/"/>
+ <updated>2018-08-23T18:31:43+05:30</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Karthik Kumar K</name>
@@ -16,10 +16,10 @@
    <title>Advance lane detection using opencv</title>
    <link href="http://localhost:4000/2018/08/21/advance-lane.html"/>
    <updated>2018-08-21T00:00:00+05:30</updated>
-   <id>http://localhost:4000/2018/08/21/advance-lane</id>
-   <content type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot; /&gt;
+   <id>http://localhost:4000/Advance_lane_detection/2018/08/21/advance-lane</id>
+   <content type="html">&lt;!-- &lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot;&gt; --&gt;
 &lt;!-- &lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; class=&quot;block&quot;&gt; --&gt;
-This post describe process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available here.
+&lt;p&gt;This post describe process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available here.
 This project was inspired by Udacity’s CarND-Advanced-Lane-Lines project.&lt;/p&gt;
 
 &lt;h3 id=&quot;the-steps-to-be-followed-to-achieve-objective-are&quot;&gt;The steps to be followed to achieve objective are:&lt;/h3&gt;
@@ -37,12 +37,12 @@ This project was inspired by Udacity’s CarND-Advanced-Lane-Lines project.&lt;/
 &lt;p&gt;The image captured is 2D representation of 3D world,Hence this transformation from 3D to 2D is not ideal, This leads to distortion in image.Therefore camera calibration isrequired to obtain camera matrix and Distortion coefficients.for more information 
 refer this&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot; /&gt;
-&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot; /&gt;&lt;/p&gt;
+&lt;!-- &lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot;&gt;
+&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot;&gt; --&gt;
 
 &lt;p&gt;For camera calibration I have used 7X9 checkerboard available here,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(place camera_01 in the same directory as cameracalib.py)&lt;/p&gt;
 
-&lt;div class=&quot;code-block&quot;&gt;
+&lt;!-- &lt;div class=&quot;code-block&quot;&gt; --&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;cv2&lt;/span&gt;
@@ -102,7 +102,7 @@ refer this&lt;/p&gt;
     &lt;span class=&quot;n&quot;&gt;mean_error&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mean_error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objpoints&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;/div&gt;
+&lt;!-- &lt;/div&gt; --&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;After successful Execution the cameraMatrix.txt and cameraDistortion.txt are saved in
 camera_01 folder.We will load this matrix into python space and pass them as argument into  ** undistort ** function
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -110,10 +110,10 @@ camera_01 folder.We will load this matrix into python space and pass them as arg
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;mtx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loadtxt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/YOUR DIRECTORY/camera_01/cameraMatrix.txt'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;delimiter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;','&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;dist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loadtxt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/YOUR DIRECTORY/camera_01/cameraDistortion.txt'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;delimiter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;','&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot; /&gt;
-&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot; /&gt;
-    The undistort function applies distortion correction to the image
- ( &lt;strong&gt;the image returned from this function is croped after distortion correction&lt;/strong&gt;)&lt;/p&gt;
+&lt;!-- &lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot;&gt;
+&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot;&gt; --&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;The undistort function applies distortion correction to the image  ( __the image returned from this function is croped after distortion correction__)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;undistort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mtx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;#function for un distorting the image wrt to camera                                        #parameters &lt;/span&gt;
                              &lt;span class=&quot;c&quot;&gt;#obtained from camera calibration&lt;/span&gt;
@@ -131,9 +131,9 @@ The bandwidth for the upper and lower limit of color mask was found through trai
 and error.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot; /&gt;
-&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot; /&gt;&lt;/p&gt;
-&lt;div class=&quot;code-block&quot;&gt;
+&lt;p&gt;&lt;img src=&quot;/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot; /&gt;
+&lt;img src=&quot;/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot; /&gt;
+&lt;!-- &lt;div class=&quot;code-block&quot;&gt;  --&gt;&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;color_filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
     &lt;span class=&quot;c&quot;&gt;#convert to HLS to mask based on HLS&lt;/span&gt;
@@ -166,11 +166,11 @@ and error.
     &lt;span class=&quot;n&quot;&gt;masked_image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bitwise_and&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;masked_image&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;/div&gt;
+&lt;!-- &lt;/div&gt; --&gt;
 &lt;h3 id=&quot;conversion-to-gray-scale-image-and-apply-canny-edge-detection&quot;&gt;conversion to gray scale image and apply canny edge detection&lt;/h3&gt;
 &lt;p&gt;The ROI image obtained is now converted into grayscale and canny edge detection algorithm is applied.
-&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot; /&gt;
-&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot; /&gt;&lt;/p&gt;
+&lt;!-- &lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot;&gt;
+&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot;&gt; --&gt;&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;greyimage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cvtColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ROIimage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;COLOR_RGB2GRAY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;cannyimage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Canny&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;greyimage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;80&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
@@ -180,8 +180,8 @@ and error.
 This is important for estimation of curvature radius in case of curved 
 track. To get BEV we want to select four source point’s in trapezoidal shape
 which we want to get the top down view
-&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot; /&gt;
-&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot; /&gt;&lt;/p&gt;
+&lt;!-- &lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot;&gt;
+&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot;&gt; --&gt;&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;birdeyeview&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
     &lt;span class=&quot;c&quot;&gt;#cv2.circle(frame, (155, 280), 5, (0, 0, 255), -1)&lt;/span&gt;
@@ -202,10 +202,7 @@ image to get the range of position of pixels in the image
 Then dividing the entire image into n(current n=9) of windows.
 Using the function the x ,y co ordinates of non zero pixels is determined. 
 In the current with margin =100,Window boundaries in x and y is determined, then within this window non zero pixel location is found.these pixels are categorized  based on the boundaries of window,Hence extracting left and right lane pixels.
-Now x and y co ordinate of right and left lane pixels are determined, we use Curve fitting to obtain the polynomial.
-&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot; /&gt;
-&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot; /&gt;&lt;/p&gt;
-&lt;div class=&quot;code-block&quot;&gt;
+Now x and y co ordinate of right and left lane pixels are determined, we use Curve fitting to obtain the polynomial.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;extract_lanes_pixels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;binary_warped&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
 
@@ -305,7 +302,7 @@ Now x and y co ordinate of right and left lane pixels are determined, we use Cur
 
         &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;left_fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;right_fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ploty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;left_fitx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;right_fitx&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;/div&gt;
+&lt;!-- &lt;/div&gt; --&gt;
 
 &lt;h3 id=&quot;warp-the-lane-boundary-back-on-to-original-image&quot;&gt;Warp the lane boundary back on to original image&lt;/h3&gt;
 &lt;p&gt;Now that lane curves are detected we will use 
@@ -313,9 +310,9 @@ cv2.fillPoly(color_warp, np.int_([pts]), (0,255,0))
 to fill image along curve. After this step  image is 
 inverse perspective transformed into original view plane.
 combined the result with original undistorted image.
-&lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot; /&gt;
+&amp;lt;!– &lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;40px&quot; /&gt;
 &lt;img src=&quot;/assets/images/ChessBoard_9x6.jpg&quot; width=&quot;60px&quot; /&gt;&lt;/p&gt;
-&lt;div class=&quot;code-block&quot;&gt;
+&lt;div class=&quot;code-block&quot;&gt; --&amp;gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;plain_lane&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;undist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;warped&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;left_fitx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;right_fitx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ploty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
         
@@ -356,8 +353,9 @@ combined the result with original undistorted image.
             &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imshow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cvtColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rundist_image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;COLOR_BGR2RGB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rundist_image&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;/div&gt;
+&lt;!-- &lt;/div&gt; --&gt;
 
+&lt;/div&gt;
 </content>
  </entry>
  

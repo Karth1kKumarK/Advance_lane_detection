@@ -2,7 +2,7 @@
 layout: post
 title : Advance lane detection using opencv
 ---
-<img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
+<!-- <img src="/assets/images/ChessBoard_9x6.jpg" width="40px"> -->
 <!-- <img src="/assets/images/ChessBoard_9x6.jpg" class="block"> -->
 This post describe process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available here.
 This project was inspired by Udacity's CarND-Advanced-Lane-Lines project.
@@ -20,12 +20,12 @@ This project was inspired by Udacity's CarND-Advanced-Lane-Lines project.
 The image captured is 2D representation of 3D world,Hence this transformation from 3D to 2D is not ideal, This leads to distortion in image.Therefore camera calibration isrequired to obtain camera matrix and Distortion coefficients.for more information 
 refer this
 
-<img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="/assets/images/ChessBoard_9x6.jpg" width="60px">
+<!-- <img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
+<img src="/assets/images/ChessBoard_9x6.jpg" width="60px"> -->
 
 For camera calibration I have used 7X9 checkerboard available here,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(place camera_01 in the same directory as cameracalib.py)
 
-<div class="code-block">
+<!-- <div class="code-block"> -->
 {% highlight python %}
 import numpy as np
 import cv2
@@ -86,7 +86,7 @@ for i in range(len(objpoints)):
 print(mean_error/len(objpoints))
 
 {% endhighlight %}
-</div>
+<!-- </div> -->
     After successful Execution the cameraMatrix.txt and cameraDistortion.txt are saved in
     camera_01 folder.We will load this matrix into python space and pass them as argument into  ** undistort ** function
 
@@ -94,8 +94,8 @@ print(mean_error/len(objpoints))
 mtx=np.loadtxt('/YOUR DIRECTORY/camera_01/cameraMatrix.txt', delimiter=',', dtype=None)
 dist=np.loadtxt('/YOUR DIRECTORY/camera_01/cameraDistortion.txt', delimiter=',', dtype=None)
 {% endhighlight %}
-<img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="/assets/images/ChessBoard_9x6.jpg" width="60px">
+<!-- <img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
+<img src="/assets/images/ChessBoard_9x6.jpg" width="60px"> -->
     The undistort function applies distortion correction to the image
  ( __the image returned from this function is croped after distortion correction__)
 {% highlight python %}
@@ -116,9 +116,9 @@ def undistort(img,mtx,dist):#function for un distorting the image wrt to camera 
     The bandwidth for the upper and lower limit of color mask was found through trail 
     and error.
 
-<img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="/assets/images/ChessBoard_9x6.jpg" width="60px">
-<div class="code-block">
+<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="40px">
+<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="60px">
+<!-- <div class="code-block">  -->
 {% highlight python %}
 def color_filter(image):
     #convert to HLS to mask based on HLS
@@ -151,11 +151,11 @@ def color_filter(image):
     masked_image = cv2.bitwise_and(img, mask)
     return masked_image
 {% endhighlight %}
-</div>
+<!-- </div> -->
 ### conversion to gray scale image and apply canny edge detection
 The ROI image obtained is now converted into grayscale and canny edge detection algorithm is applied.
-<img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="/assets/images/ChessBoard_9x6.jpg" width="60px">
+<!-- <img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
+<img src="/assets/images/ChessBoard_9x6.jpg" width="60px"> -->
 {% highlight python %}
 greyimage=cv2.cvtColor(ROIimage, cv2.COLOR_RGB2GRAY)
 cannyimage=cv2.Canny(greyimage,100 ,80)
@@ -165,8 +165,8 @@ The persepctive transformation will give us top down view of the track.
 This is important for estimation of curvature radius in case of curved 
 track. To get BEV we want to select four source point's in trapezoidal shape
 which we want to get the top down view
-<img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="/assets/images/ChessBoard_9x6.jpg" width="60px">
+<!-- <img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
+<img src="/assets/images/ChessBoard_9x6.jpg" width="60px"> -->
 {% highlight python %}
 def birdeyeview(frame):
     #cv2.circle(frame, (155, 280), 5, (0, 0, 255), -1)
@@ -189,9 +189,7 @@ Then dividing the entire image into n(current n=9) of windows.
 Using the function the x ,y co ordinates of non zero pixels is determined. 
 In the current with margin =100,Window boundaries in x and y is determined, then within this window non zero pixel location is found.these pixels are categorized  based on the boundaries of window,Hence extracting left and right lane pixels.
 Now x and y co ordinate of right and left lane pixels are determined, we use Curve fitting to obtain the polynomial.
-<img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="/assets/images/ChessBoard_9x6.jpg" width="60px">
-<div class="code-block">
+
 {% highlight python %}
 def extract_lanes_pixels(binary_warped):
 
@@ -291,7 +289,7 @@ def poly_fit(leftx, lefty, rightx, righty, left_lane_inds, right_lane_inds, bina
 
         return left_fit, right_fit, ploty, left_fitx, right_fitx
 {% endhighlight %}
-</div>
+<!-- </div> -->
 
 ### Warp the lane boundary back on to original image
 Now that lane curves are detected we will use 
@@ -299,9 +297,9 @@ cv2.fillPoly(color_warp, np.int_([pts]), (0,255,0))
 to fill image along curve. After this step  image is 
 inverse perspective transformed into original view plane.
 combined the result with original undistorted image.
-<img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
+<!-- <img src="/assets/images/ChessBoard_9x6.jpg" width="40px">
 <img src="/assets/images/ChessBoard_9x6.jpg" width="60px">
-<div class="code-block">
+<div class="code-block"> -->
 {% highlight python %}
 def plain_lane(undist, warped, M, left_fitx, right_fitx, ploty, plot=False):
         
@@ -342,5 +340,5 @@ def plain_lane(undist, warped, M, left_fitx, right_fitx, ploty, plot=False):
             plt.imshow(cv2.cvtColor(rundist_image, cv2.COLOR_BGR2RGB))
         return rundist_image
 {% endhighlight %}
-</div>
+<!-- </div> -->
 
