@@ -89,7 +89,7 @@
         <div class="post">
   <h1 class="post-title">Advance lane detection using opencv</h1>
   <span class="post-date">24 Aug 2018</span>
-  <p>This post describe process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available here.
+  <p>This post describes process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available <a href="https://github.com/Karth1kKumarK/Advance_lane_detection_code" target="_blank">here</a>.
 This project was inspired by Udacity’s CarND-Advanced-Lane-Lines project.</p>
 <table style="width:100%; border:0px;">
   <tr>
@@ -105,7 +105,7 @@ This project was inspired by Udacity’s CarND-Advanced-Lane-Lines project.</p>
 <ul>
   <li>calibration of rpi camera to obtain intrinsic camera parameters and distortion      coefficients.</li>
   <li>Apply distortion correction to image from rpi camera.</li>
-  <li>Apply color mask to image to filter out unnecessary information</li>
+  <li>Apply color mask,ROI to image to filter out unnecessary information</li>
   <li>Conversion to gray scale image and apply canny edge detection</li>
   <li>Apply a perspective transform to get bird eye view.</li>
   <li>Detect lane pixels and fit to find the lane boundary.</li>
@@ -113,10 +113,10 @@ This project was inspired by Udacity’s CarND-Advanced-Lane-Lines project.</p>
 </ul>
 
 <h3 id="rpi-camera-calibration">Rpi Camera calibration:</h3>
-<p>The image captured is 2D representation of 3D world,Hence this transformation from 3D to 2D is not ideal, This leads to distortion in image.Therefore camera calibration isrequired to obtain camera matrix and Distortion coefficients.for more information 
-refer this</p>
+<p>The image captured is 2D representation of 3D world,Hence this transformation from 3D to 2D is not ideal, This leads to distortion in image.Therefore camera calibration is required to obtain camera matrix and Distortion coefficients.for more information 
+refer <a href="https://docs.opencv.org/3.1.0/dc/dbb/tutorial_py_calibration.html" target="_blank">this.</a></p>
 
-<p>For camera calibration I have used 7X9 checkerboard available <a href="https://www.mrpt.org/downloads/camera-calibration-checker-board_9x7.pdf" target="_blank">here</a>,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(<strong>place camera_01 in the same directory as cameracalib.py</strong>)</p>
+<p>For camera calibration,I have used 7X9 checkerboard available <a href="https://www.mrpt.org/downloads/camera-calibration-checker-board_9x7.pdf" target="_blank">here</a>,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(<strong>place camera_01 in the same directory as cameracalib.py</strong>)</p>
 
 <div class="code-block">
 
@@ -180,7 +180,7 @@ refer this</p>
 
 </div>
 
-<p>After successful Execution the cameraMatrix.txt and cameraDistortion.txt are saved in camera_01 folder.We will load this matrix into python space and pass them as argument 
+<p>After successful, Execution the cameraMatrix.txt and cameraDistortion.txt are saved in camera_01 folder.We will load this matrix into python space and pass them as argument 
 into <strong>undistort</strong> function.</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">mtx</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">'/YOUR DIRECTORY/camera_01/cameraMatrix.txt'</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">','</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
@@ -205,6 +205,7 @@ into <strong>undistort</strong> function.</p>
         <span class="n">h</span><span class="p">,</span><span class="n">w</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">newcameramtx</span><span class="p">,</span><span class="n">roi</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">getOptimalNewCameraMatrix</span><span class="p">(</span><span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">))</span> 
         <span class="n">dst</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistort</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">newcameramtx</span><span class="p">)</span>
+        <span class="c"># crop the image</span>
         <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">roi</span>
         <span class="n">dst</span> <span class="o">=</span> <span class="n">dst</span><span class="p">[</span><span class="n">y</span><span class="p">:</span><span class="n">y</span><span class="o">+</span><span class="n">h</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">+</span><span class="n">w</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">dst</span></code></pre></figure>
@@ -275,7 +276,7 @@ Hence color mask and the Region of interest)( <strong>ROI</strong>) is applied t
 <span class="n">cannyimage</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">Canny</span><span class="p">(</span><span class="n">greyimage</span><span class="p">,</span><span class="mi">100</span> <span class="p">,</span><span class="mi">80</span><span class="p">)</span></code></pre></figure>
 
 <h3 id="apply-a-perspective-transform-to-get-bird-eye-viewbev">Apply a perspective transform to get bird eye view(BEV)</h3>
-<p>The persepctive transformation will give us top down view of the track.
+<p>The perspective transformation will give us top down view of the track.
 This is important for estimation of curvature radius in case of curved 
 track. To get BEV we want to select four source point’s in trapezoidal shape
 which we want to get the top down view</p>
@@ -416,9 +417,9 @@ Now x and y co ordinate of right and left lane pixels are determined, we use Cur
 <h3 id="warp-the-lane-boundary-back-on-to-original-image">Warp the lane boundary back on to original image</h3>
 <p>Now that lane curves are detected we will use 
 cv2.fillPoly(color_warp, np.int_([pts]), (0,255,0))
-to fill image along curve. After this step  image is 
-inverse perspective transformed into original view plane.
-combined the result with original undistorted image.
+to fill image along curve. After this step,Image is 
+inverse perspective transformed into original view plane and 
+combined with the  original undistorted image.
 <img src="/Advance_lane_detection/assets/images/final.png" /></p>
 <div class="code-block">
 

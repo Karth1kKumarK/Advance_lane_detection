@@ -2,7 +2,7 @@
 layout: post
 title : Advance lane detection using opencv
 ---
-This post describe process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available here.
+This post describes process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available <a href="https://github.com/Karth1kKumarK/Advance_lane_detection_code" target="_blank">here</a>.
 This project was inspired by Udacity's CarND-Advanced-Lane-Lines project.
 <table style="width:100%; border:0px;">
   <tr>
@@ -17,18 +17,18 @@ This project was inspired by Udacity's CarND-Advanced-Lane-Lines project.
 ### The steps to be followed to achieve objective are:
 -   calibration of rpi camera to obtain intrinsic camera parameters and distortion      coefficients.
 -  Apply distortion correction to image from rpi camera.
--  Apply color mask to image to filter out unnecessary information
+-  Apply color mask,ROI to image to filter out unnecessary information
 -  Conversion to gray scale image and apply canny edge detection
 -  Apply a perspective transform to get bird eye view.
 -  Detect lane pixels and fit to find the lane boundary.
 -  Warp the lane boundary back on to original image
 
 ### Rpi Camera calibration:
-The image captured is 2D representation of 3D world,Hence this transformation from 3D to 2D is not ideal, This leads to distortion in image.Therefore camera calibration isrequired to obtain camera matrix and Distortion coefficients.for more information 
-refer this
+The image captured is 2D representation of 3D world,Hence this transformation from 3D to 2D is not ideal, This leads to distortion in image.Therefore camera calibration is required to obtain camera matrix and Distortion coefficients.for more information 
+refer <a href="https://docs.opencv.org/3.1.0/dc/dbb/tutorial_py_calibration.html" target="_blank">this.</a>
 
 
-For camera calibration I have used 7X9 checkerboard available <a href="https://www.mrpt.org/downloads/camera-calibration-checker-board_9x7.pdf" target="_blank">here</a>,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(__place camera_01 in the same directory as cameracalib.py__)
+For camera calibration,I have used 7X9 checkerboard available <a href="https://www.mrpt.org/downloads/camera-calibration-checker-board_9x7.pdf" target="_blank">here</a>,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(__place camera_01 in the same directory as cameracalib.py__)
 
 <div class="code-block">
 {% highlight python %}
@@ -93,7 +93,7 @@ print(mean_error/len(objpoints))
 {% endhighlight %}
 </div>
 
-After successful Execution the cameraMatrix.txt and cameraDistortion.txt are saved in camera_01 folder.We will load this matrix into python space and pass them as argument 
+After successful, Execution the cameraMatrix.txt and cameraDistortion.txt are saved in camera_01 folder.We will load this matrix into python space and pass them as argument 
 into __undistort__ function.
 {% highlight python %}
 mtx=np.loadtxt('/YOUR DIRECTORY/camera_01/cameraMatrix.txt', delimiter=',', dtype=None)
@@ -119,6 +119,7 @@ def undistort(img,mtx,dist):#function for un distorting the image wrt to camera 
         h,w = img.shape[:2]
         newcameramtx,roi=cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h)) 
         dst = cv2.undistort(img, mtx, dist, None, newcameramtx)
+        # crop the image
         x,y,w,h = roi
         dst = dst[y:y+h, x:x+w]
         return dst
@@ -191,7 +192,7 @@ greyimage=cv2.cvtColor(ROIimage, cv2.COLOR_RGB2GRAY)
 cannyimage=cv2.Canny(greyimage,100 ,80)
 {% endhighlight %}
 ### Apply a perspective transform to get bird eye view(BEV)
-The persepctive transformation will give us top down view of the track.
+The perspective transformation will give us top down view of the track.
 This is important for estimation of curvature radius in case of curved 
 track. To get BEV we want to select four source point's in trapezoidal shape
 which we want to get the top down view
@@ -333,9 +334,9 @@ def poly_fit(leftx, lefty, rightx, righty, left_lane_inds, right_lane_inds, bina
 ### Warp the lane boundary back on to original image
 Now that lane curves are detected we will use 
 cv2.fillPoly(color_warp, np.int_([pts]), (0,255,0))
-to fill image along curve. After this step  image is 
-inverse perspective transformed into original view plane.
-combined the result with original undistorted image.
+to fill image along curve. After this step,Image is 
+inverse perspective transformed into original view plane and 
+combined with the  original undistorted image.
 <img src="{{ site.baseurl }}/assets/images/final.png">
 <div class="code-block">
 {% highlight python %}

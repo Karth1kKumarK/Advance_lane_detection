@@ -4,7 +4,7 @@
  <title>Karth1kKumarK.github.io</title>
  <link href="http://localhost:4000/Advance_lane_detection/atom.xml" rel="self"/>
  <link href="http://localhost:4000/Advance_lane_detection/"/>
- <updated>2018-08-24T17:46:54+05:30</updated>
+ <updated>2018-08-24T23:28:48+05:30</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Karthik Kumar K</name>
@@ -17,7 +17,7 @@
    <link href="http://localhost:4000/2018/08/24/advance-lane.html"/>
    <updated>2018-08-24T00:00:00+05:30</updated>
    <id>http://localhost:4000/Advance_lane_detection/2018/08/24/advance-lane</id>
-   <content type="html">&lt;p&gt;This post describe process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available here.
+   <content type="html">&lt;p&gt;This post describes process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available &lt;a href=&quot;https://github.com/Karth1kKumarK/Advance_lane_detection_code&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.
 This project was inspired by Udacity’s CarND-Advanced-Lane-Lines project.&lt;/p&gt;
 &lt;table style=&quot;width:100%; border:0px;&quot;&gt;
   &lt;tr&gt;
@@ -33,7 +33,7 @@ This project was inspired by Udacity’s CarND-Advanced-Lane-Lines project.&lt;/
 &lt;ul&gt;
   &lt;li&gt;calibration of rpi camera to obtain intrinsic camera parameters and distortion      coefficients.&lt;/li&gt;
   &lt;li&gt;Apply distortion correction to image from rpi camera.&lt;/li&gt;
-  &lt;li&gt;Apply color mask to image to filter out unnecessary information&lt;/li&gt;
+  &lt;li&gt;Apply color mask,ROI to image to filter out unnecessary information&lt;/li&gt;
   &lt;li&gt;Conversion to gray scale image and apply canny edge detection&lt;/li&gt;
   &lt;li&gt;Apply a perspective transform to get bird eye view.&lt;/li&gt;
   &lt;li&gt;Detect lane pixels and fit to find the lane boundary.&lt;/li&gt;
@@ -41,10 +41,10 @@ This project was inspired by Udacity’s CarND-Advanced-Lane-Lines project.&lt;/
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;rpi-camera-calibration&quot;&gt;Rpi Camera calibration:&lt;/h3&gt;
-&lt;p&gt;The image captured is 2D representation of 3D world,Hence this transformation from 3D to 2D is not ideal, This leads to distortion in image.Therefore camera calibration isrequired to obtain camera matrix and Distortion coefficients.for more information 
-refer this&lt;/p&gt;
+&lt;p&gt;The image captured is 2D representation of 3D world,Hence this transformation from 3D to 2D is not ideal, This leads to distortion in image.Therefore camera calibration is required to obtain camera matrix and Distortion coefficients.for more information 
+refer &lt;a href=&quot;https://docs.opencv.org/3.1.0/dc/dbb/tutorial_py_calibration.html&quot; target=&quot;_blank&quot;&gt;this.&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;For camera calibration I have used 7X9 checkerboard available &lt;a href=&quot;https://www.mrpt.org/downloads/camera-calibration-checker-board_9x7.pdf&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(&lt;strong&gt;place camera_01 in the same directory as cameracalib.py&lt;/strong&gt;)&lt;/p&gt;
+&lt;p&gt;For camera calibration,I have used 7X9 checkerboard available &lt;a href=&quot;https://www.mrpt.org/downloads/camera-calibration-checker-board_9x7.pdf&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(&lt;strong&gt;place camera_01 in the same directory as cameracalib.py&lt;/strong&gt;)&lt;/p&gt;
 
 &lt;div class=&quot;code-block&quot;&gt;
 
@@ -108,7 +108,7 @@ refer this&lt;/p&gt;
 
 &lt;/div&gt;
 
-&lt;p&gt;After successful Execution the cameraMatrix.txt and cameraDistortion.txt are saved in camera_01 folder.We will load this matrix into python space and pass them as argument 
+&lt;p&gt;After successful, Execution the cameraMatrix.txt and cameraDistortion.txt are saved in camera_01 folder.We will load this matrix into python space and pass them as argument 
 into &lt;strong&gt;undistort&lt;/strong&gt; function.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;mtx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loadtxt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/YOUR DIRECTORY/camera_01/cameraMatrix.txt'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;delimiter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;','&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -133,6 +133,7 @@ into &lt;strong&gt;undistort&lt;/strong&gt; function.&lt;/p&gt;
         &lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;newcameramtx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;roi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getOptimalNewCameraMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mtx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; 
         &lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;undistort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newcameramtx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;# crop the image&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;roi&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
@@ -203,7 +204,7 @@ Hence color mask and the Region of interest)( &lt;strong&gt;ROI&lt;/strong&gt;) 
 &lt;span class=&quot;n&quot;&gt;cannyimage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cv2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Canny&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;greyimage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;80&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h3 id=&quot;apply-a-perspective-transform-to-get-bird-eye-viewbev&quot;&gt;Apply a perspective transform to get bird eye view(BEV)&lt;/h3&gt;
-&lt;p&gt;The persepctive transformation will give us top down view of the track.
+&lt;p&gt;The perspective transformation will give us top down view of the track.
 This is important for estimation of curvature radius in case of curved 
 track. To get BEV we want to select four source point’s in trapezoidal shape
 which we want to get the top down view&lt;/p&gt;
@@ -344,9 +345,9 @@ Now x and y co ordinate of right and left lane pixels are determined, we use Cur
 &lt;h3 id=&quot;warp-the-lane-boundary-back-on-to-original-image&quot;&gt;Warp the lane boundary back on to original image&lt;/h3&gt;
 &lt;p&gt;Now that lane curves are detected we will use 
 cv2.fillPoly(color_warp, np.int_([pts]), (0,255,0))
-to fill image along curve. After this step  image is 
-inverse perspective transformed into original view plane.
-combined the result with original undistorted image.
+to fill image along curve. After this step,Image is 
+inverse perspective transformed into original view plane and 
+combined with the  original undistorted image.
 &lt;img src=&quot;/Advance_lane_detection/assets/images/final.png&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;code-block&quot;&gt;
 
