@@ -314,11 +314,10 @@ which we want to get the top down view</p>
 
 <h3 id="detect-lane-pixels-and-fit-to-find-the-lane-boundary">Detect lane pixels and fit to find the lane boundary</h3>
 <p>The lane detection relies on extraction of lane pixel and to  fit the curve to  get the  curvature and that in turn can we used to compute steering angles.
-The approach used here is histogram of the lower half of the
-image to get the range of position of pixels in the image
+The approach used here is  to get histogram of the lower half of the
+image to get the range of position of pixels in the image.
 Then dividing the entire image into n(current n=9) of windows.
-Using the function the x ,y co ordinates of non zero pixels is determined. 
-In the current with margin =100,Window boundaries in x and y is determined, then within this window non zero pixel location is found.these pixels are categorized  based on the boundaries of window,Hence extracting left and right lane pixels.
+Using the function <strong>Yourimage.nonzero()</strong> to get x ,y co ordinates of non zero pixels is determined.In the current window with width =100,Window boundaries in x and y is determined, then within this window non zero pixel location is found.these pixels are categorized  based on the boundaries of window,Hence extracting left and right lane pixels.
 Now x and y co ordinate of right and left lane pixels are determined, we use Curve fitting to obtain the polynomial.
 <img src="/Advance_lane_detection/assets/images/lane_detect.png" width="480px" /></p>
 <div class="code-block"> 

@@ -4,7 +4,7 @@
  <title>Karth1kKumarK.github.io</title>
  <link href="http://localhost:4000/Advance_lane_detection/atom.xml" rel="self"/>
  <link href="http://localhost:4000/Advance_lane_detection/"/>
- <updated>2018-08-24T23:28:48+05:30</updated>
+ <updated>2018-08-25T02:14:21+05:30</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Karthik Kumar K</name>
@@ -233,11 +233,10 @@ which we want to get the top down view&lt;/p&gt;
 
 &lt;h3 id=&quot;detect-lane-pixels-and-fit-to-find-the-lane-boundary&quot;&gt;Detect lane pixels and fit to find the lane boundary&lt;/h3&gt;
 &lt;p&gt;The lane detection relies on extraction of lane pixel and to  fit the curve to  get the  curvature and that in turn can we used to compute steering angles.
-The approach used here is histogram of the lower half of the
-image to get the range of position of pixels in the image
+The approach used here is  to get histogram of the lower half of the
+image to get the range of position of pixels in the image.
 Then dividing the entire image into n(current n=9) of windows.
-Using the function the x ,y co ordinates of non zero pixels is determined. 
-In the current with margin =100,Window boundaries in x and y is determined, then within this window non zero pixel location is found.these pixels are categorized  based on the boundaries of window,Hence extracting left and right lane pixels.
+Using the function &lt;strong&gt;Yourimage.nonzero()&lt;/strong&gt; to get x ,y co ordinates of non zero pixels is determined.In the current window with width =100,Window boundaries in x and y is determined, then within this window non zero pixel location is found.these pixels are categorized  based on the boundaries of window,Hence extracting left and right lane pixels.
 Now x and y co ordinate of right and left lane pixels are determined, we use Curve fitting to obtain the polynomial.
 &lt;img src=&quot;/Advance_lane_detection/assets/images/lane_detect.png&quot; width=&quot;480px&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;code-block&quot;&gt; 
