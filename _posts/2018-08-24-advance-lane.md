@@ -2,11 +2,18 @@
 layout: post
 title : Advance lane detection using opencv
 ---
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="60px">
 This post describe process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available here.
 This project was inspired by Udacity's CarND-Advanced-Lane-Lines project.
-
+<table style="width:100%; border:0px;">
+  <tr>
+    <th>Track</th>
+    <th>Platform</th> 
+  </tr>
+  <tr>
+    <td><img src="{{ site.baseurl }}/assets/images/IMG_20180824_170612.jpg" width="580px"></td>
+    <td><img src="{{ site.baseurl }}/assets/images/car.png" width="280px"></td>
+  </tr>
+</table>
 ### The steps to be followed to achieve objective are:
 -   calibration of rpi camera to obtain intrinsic camera parameters and distortion      coefficients.
 -  Apply distortion correction to image from rpi camera.
@@ -19,9 +26,9 @@ This project was inspired by Udacity's CarND-Advanced-Lane-Lines project.
 ### Rpi Camera calibration:
 The image captured is 2D representation of 3D world,Hence this transformation from 3D to 2D is not ideal, This leads to distortion in image.Therefore camera calibration isrequired to obtain camera matrix and Distortion coefficients.for more information 
 refer this
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="60px">
-For camera calibration I have used 7X9 checkerboard available here,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(place camera_01 in the same directory as cameracalib.py)
+
+
+For camera calibration I have used 7X9 checkerboard available <a href="https://www.mrpt.org/downloads/camera-calibration-checker-board_9x7.pdf" target="_blank">here</a>,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(__place camera_01 in the same directory as cameracalib.py__)
 
 <div class="code-block">
 {% highlight python %}
@@ -85,17 +92,27 @@ print(mean_error/len(objpoints))
 
 {% endhighlight %}
 </div>
-    After successful Execution the cameraMatrix.txt and cameraDistortion.txt are saved in
-    camera_01 folder.We will load this matrix into python space and pass them as argument into  ** undistort ** function
 
+After successful Execution the cameraMatrix.txt and cameraDistortion.txt are saved in camera_01 folder.We will load this matrix into python space and pass them as argument 
+into __undistort__ function.
 {% highlight python %}
 mtx=np.loadtxt('/YOUR DIRECTORY/camera_01/cameraMatrix.txt', delimiter=',', dtype=None)
 dist=np.loadtxt('/YOUR DIRECTORY/camera_01/cameraDistortion.txt', delimiter=',', dtype=None)
 {% endhighlight %}
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="60px">
-    The undistort function applies distortion correction to the image
- ( __the image returned from this function is croped after distortion correction__)
+
+<table style="width:100%; border:0px;">
+  <tr>
+    <th>Distorted</th>
+    <th>Undistorted</th> 
+  </tr>
+  <tr>
+    <td><img src="{{ site.baseurl }}/assets/images/snapshot_640_480_20.jpg" width="280px"></td>
+    <td><img src="{{ site.baseurl }}/assets/images/calibresult.png" width="280px"></td>
+  </tr>
+</table>
+
+The undistort function applies distortion correction to the image
+(__the image returned from this function is croped after distortion correction__)
 {% highlight python %}
 def undistort(img,mtx,dist):#function for un distorting the image wrt to camera                                        #parameters 
                              #obtained from camera calibration
@@ -109,13 +126,19 @@ def undistort(img,mtx,dist):#function for un distorting the image wrt to camera 
 
 
 ### Apply color mask,roi to image to filter out unnecessary information
-    In the the current project because of the Color of the left,right lane are same.
-    Hence color mask and the Region of interest)( __ROI__) is applied to the image, The information other than the ROI and bandwidth of the color mask  is eliminated.
-    The bandwidth for the upper and lower limit of color mask was found through trail 
-    and error.
 
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="60px">
+In the the current project because of the Color of the left,right lane are same.
+Hence color mask and the Region of interest)( __ROI__) is applied to the image, The information other than the ROI and bandwidth of the color mask  is eliminated.The bandwidth for the upper and lower limit of color mask was found through trail and error.
+<table style="width:100%; border:0px;">
+  <tr>
+    <th>Undisort image</th>
+    <th>ROI image</th> 
+  </tr>
+  <tr>
+    <td><img src="{{ site.baseurl }}/assets/images/Undistort.png" width="480px"></td>
+    <td><img src="{{ site.baseurl }}/assets/images/ROIimage.png" width="280px"></td>
+  </tr>
+</table>
 <div class="code-block"> 
 {% highlight python %}
 def color_filter(image):
@@ -153,8 +176,16 @@ def color_filter(image):
 
 ### conversion to gray scale image and apply canny edge detection
 The ROI image obtained is now converted into grayscale and canny edge detection algorithm is applied.
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="60px">
+<table style="width:100%; border:0px;">
+  <tr>
+    <th>Gray scale image </th>
+    <th>Canny edge</th> 
+  </tr>
+  <tr>
+    <td><img src="{{ site.baseurl }}/assets/images/greyscale.png" width="280px"></td>
+    <td><img src="{{ site.baseurl }}/assets/images/canny.png" width="280px"></td>
+  </tr>
+</table>
 {% highlight python %}
 greyimage=cv2.cvtColor(ROIimage, cv2.COLOR_RGB2GRAY)
 cannyimage=cv2.Canny(greyimage,100 ,80)
@@ -164,8 +195,16 @@ The persepctive transformation will give us top down view of the track.
 This is important for estimation of curvature radius in case of curved 
 track. To get BEV we want to select four source point's in trapezoidal shape
 which we want to get the top down view
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="60px">
+<table style="width:100%; border:0px;">
+  <tr>
+    <th>Canny edge </th>
+    <th>Bird Eye view</th> 
+  </tr>
+  <tr>
+    <td><img src="{{ site.baseurl }}/assets/images/canny.png" width="280px"></td>
+    <td><img src="{{ site.baseurl }}/assets/images/birdeye.png" width="280px"></td>
+  </tr>
+</table>
 {% highlight python %}
 def birdeyeview(frame):
     #cv2.circle(frame, (155, 280), 5, (0, 0, 255), -1)
@@ -188,6 +227,7 @@ Then dividing the entire image into n(current n=9) of windows.
 Using the function the x ,y co ordinates of non zero pixels is determined. 
 In the current with margin =100,Window boundaries in x and y is determined, then within this window non zero pixel location is found.these pixels are categorized  based on the boundaries of window,Hence extracting left and right lane pixels.
 Now x and y co ordinate of right and left lane pixels are determined, we use Curve fitting to obtain the polynomial.
+<img src="{{ site.baseurl }}/assets/images/lane_detect.png" width="480px">
 <div class="code-block"> 
 {% highlight python %}
 def extract_lanes_pixels(binary_warped):
@@ -296,8 +336,7 @@ cv2.fillPoly(color_warp, np.int_([pts]), (0,255,0))
 to fill image along curve. After this step  image is 
 inverse perspective transformed into original view plane.
 combined the result with original undistorted image.
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="40px">
-<img src="{{ site.baseurl }}/assets/images/ChessBoard_9x6.jpg" width="60px">
+<img src="{{ site.baseurl }}/assets/images/final.png">
 <div class="code-block">
 {% highlight python %}
 def plain_lane(undist, warped, M, left_fitx, right_fitx, ploty, plot=False):

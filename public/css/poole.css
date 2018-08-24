@@ -178,7 +178,10 @@ pre code {
   color: inherit;
   background-color: transparent;
 }
-
+figure{
+  margin:0px;
+  padding:0px;
+}
 /* Pygments via Jekyll */
 .highlight {
   margin-bottom: 1rem;
@@ -187,6 +190,7 @@ pre code {
 .highlight pre {
   margin-bottom: 0;
 }
+
 
 /* Gist via GitHub Pages */
 .gist .gist-file {
@@ -240,13 +244,13 @@ img {
 table {
   margin-bottom: 1rem;
   width: 100%;
-  border: 1px solid #e5e5e5;
+  /* border: 1px solid #e5e5e5; */
   border-collapse: collapse;
 }
 td,
 th {
   padding: .25rem .5rem;
-  border: 1px solid #e5e5e5;
+  /* border: 1px solid #e5e5e5; */
 }
 tbody tr:nth-child(odd) td,
 tbody tr:nth-child(odd) th {

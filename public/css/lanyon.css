@@ -95,6 +95,7 @@ h1, h2, h3, h4, h5, h6 {
  .code-block{
   max-height: 400px; /* Change to your desired max height */
   overflow-y: scroll;
+  width:100%;
  }
 
 .masthead {

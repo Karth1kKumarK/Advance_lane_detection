@@ -30,7 +30,7 @@
 </head>
 
 
-  <body>
+  <body class="theme-base-08">
 
     <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
      styles, `#sidebar-checkbox` for behavior. -->
@@ -91,18 +91,25 @@
   <div class="post">
     <!-- <img src="ChessBoard_9x6.jpg"> -->
     <h1 class="post-title">
-      <a href="/Advance_lane_detection//2018/08/21/advance-lane.html">
+      <a href="/Advance_lane_detection//2018/08/24/advance-lane.html">
         Advance lane detection using opencv
       </a>
     </h1>
 
-    <span class="post-date">21 Aug 2018</span>
+    <span class="post-date">24 Aug 2018</span>
 
-    <p><img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="40px" />
-<img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="60px" />
-This post describe process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available here.
+    <p>This post describe process and code implementation required to achieve lane detection with rpi camera using opencv pipeline. The code is in jupyter notebook is available here.
 This project was inspired by Udacity’s CarND-Advanced-Lane-Lines project.</p>
-
+<table style="width:100%; border:0px;">
+  <tr>
+    <th>Track</th>
+    <th>Platform</th> 
+  </tr>
+  <tr>
+    <td><img src="/Advance_lane_detection/assets/images/IMG_20180824_170612.jpg" width="580px" /></td>
+    <td><img src="/Advance_lane_detection/assets/images/car.png" width="280px" /></td>
+  </tr>
+</table>
 <h3 id="the-steps-to-be-followed-to-achieve-objective-are">The steps to be followed to achieve objective are:</h3>
 <ul>
   <li>calibration of rpi camera to obtain intrinsic camera parameters and distortion      coefficients.</li>
@@ -116,10 +123,9 @@ This project was inspired by Udacity’s CarND-Advanced-Lane-Lines project.</p>
 
 <h3 id="rpi-camera-calibration">Rpi Camera calibration:</h3>
 <p>The image captured is 2D representation of 3D world,Hence this transformation from 3D to 2D is not ideal, This leads to distortion in image.Therefore camera calibration isrequired to obtain camera matrix and Distortion coefficients.for more information 
-refer this
-<img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="40px" />
-<img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="60px" />
-For camera calibration I have used 7X9 checkerboard available here,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(place camera_01 in the same directory as cameracalib.py)</p>
+refer this</p>
+
+<p>For camera calibration I have used 7X9 checkerboard available <a href="https://www.mrpt.org/downloads/camera-calibration-checker-board_9x7.pdf" target="_blank">here</a>,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(<strong>place camera_01 in the same directory as cameracalib.py</strong>)</p>
 
 <div class="code-block">
 
@@ -182,17 +188,26 @@ For camera calibration I have used 7X9 checkerboard available here,capture the i
 <span class="k">print</span><span class="p">(</span><span class="n">mean_error</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">objpoints</span><span class="p">))</span></code></pre></figure>
 
 </div>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>After successful Execution the cameraMatrix.txt and cameraDistortion.txt are saved in
-camera_01 folder.We will load this matrix into python space and pass them as argument into  ** undistort ** function
-</code></pre></div></div>
+
+<p>After successful Execution the cameraMatrix.txt and cameraDistortion.txt are saved in camera_01 folder.We will load this matrix into python space and pass them as argument 
+into <strong>undistort</strong> function.</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">mtx</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">'/YOUR DIRECTORY/camera_01/cameraMatrix.txt'</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">','</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
 <span class="n">dist</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">'/YOUR DIRECTORY/camera_01/cameraDistortion.txt'</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">','</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span></code></pre></figure>
 
-<p><img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="40px" />
-<img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="60px" />
-    The undistort function applies distortion correction to the image
- ( <strong>the image returned from this function is croped after distortion correction</strong>)</p>
+<table style="width:100%; border:0px;">
+  <tr>
+    <th>Distorted</th>
+    <th>Undistorted</th> 
+  </tr>
+  <tr>
+    <td><img src="/Advance_lane_detection/assets/images/snapshot_640_480_20.jpg" width="280px" /></td>
+    <td><img src="/Advance_lane_detection/assets/images/calibresult.png" width="280px" /></td>
+  </tr>
+</table>
+
+<p>The undistort function applies distortion correction to the image
+(<strong>the image returned from this function is croped after distortion correction</strong>)</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">undistort</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">mtx</span><span class="p">,</span><span class="n">dist</span><span class="p">):</span><span class="c">#function for un distorting the image wrt to camera                                        #parameters </span>
                              <span class="c">#obtained from camera calibration</span>
@@ -204,14 +219,19 @@ camera_01 folder.We will load this matrix into python space and pass them as arg
         <span class="k">return</span> <span class="n">dst</span></code></pre></figure>
 
 <h3 id="apply-color-maskroi-to-image-to-filter-out-unnecessary-information">Apply color mask,roi to image to filter out unnecessary information</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>In the the current project because of the Color of the left,right lane are same.
-Hence color mask and the Region of interest)( __ROI__) is applied to the image, The information other than the ROI and bandwidth of the color mask  is eliminated.
-The bandwidth for the upper and lower limit of color mask was found through trail 
-and error.
-</code></pre></div></div>
 
-<p><img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="40px" />
-<img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="60px" /></p>
+<p>In the the current project because of the Color of the left,right lane are same.
+Hence color mask and the Region of interest)( <strong>ROI</strong>) is applied to the image, The information other than the ROI and bandwidth of the color mask  is eliminated.The bandwidth for the upper and lower limit of color mask was found through trail and error.</p>
+<table style="width:100%; border:0px;">
+  <tr>
+    <th>Undisort image</th>
+    <th>ROI image</th> 
+  </tr>
+  <tr>
+    <td><img src="/Advance_lane_detection/assets/images/Undistort.png" width="480px" /></td>
+    <td><img src="/Advance_lane_detection/assets/images/ROIimage.png" width="280px" /></td>
+  </tr>
+</table>
 <div class="code-block"> 
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">color_filter</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
@@ -248,9 +268,17 @@ and error.
 </div>
 
 <h3 id="conversion-to-gray-scale-image-and-apply-canny-edge-detection">conversion to gray scale image and apply canny edge detection</h3>
-<p>The ROI image obtained is now converted into grayscale and canny edge detection algorithm is applied.
-<img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="40px" />
-<img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="60px" /></p>
+<p>The ROI image obtained is now converted into grayscale and canny edge detection algorithm is applied.</p>
+<table style="width:100%; border:0px;">
+  <tr>
+    <th>Gray scale image </th>
+    <th>Canny edge</th> 
+  </tr>
+  <tr>
+    <td><img src="/Advance_lane_detection/assets/images/greyscale.png" width="280px" /></td>
+    <td><img src="/Advance_lane_detection/assets/images/canny.png" width="280px" /></td>
+  </tr>
+</table>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">greyimage</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">ROIimage</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_RGB2GRAY</span><span class="p">)</span>
 <span class="n">cannyimage</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">Canny</span><span class="p">(</span><span class="n">greyimage</span><span class="p">,</span><span class="mi">100</span> <span class="p">,</span><span class="mi">80</span><span class="p">)</span></code></pre></figure>
@@ -259,9 +287,17 @@ and error.
 <p>The persepctive transformation will give us top down view of the track.
 This is important for estimation of curvature radius in case of curved 
 track. To get BEV we want to select four source point’s in trapezoidal shape
-which we want to get the top down view
-<img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="40px" />
-<img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="60px" /></p>
+which we want to get the top down view</p>
+<table style="width:100%; border:0px;">
+  <tr>
+    <th>Canny edge </th>
+    <th>Bird Eye view</th> 
+  </tr>
+  <tr>
+    <td><img src="/Advance_lane_detection/assets/images/canny.png" width="280px" /></td>
+    <td><img src="/Advance_lane_detection/assets/images/birdeye.png" width="280px" /></td>
+  </tr>
+</table>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">birdeyeview</span><span class="p">(</span><span class="n">frame</span><span class="p">):</span>
     <span class="c">#cv2.circle(frame, (155, 280), 5, (0, 0, 255), -1)</span>
@@ -282,7 +318,8 @@ image to get the range of position of pixels in the image
 Then dividing the entire image into n(current n=9) of windows.
 Using the function the x ,y co ordinates of non zero pixels is determined. 
 In the current with margin =100,Window boundaries in x and y is determined, then within this window non zero pixel location is found.these pixels are categorized  based on the boundaries of window,Hence extracting left and right lane pixels.
-Now x and y co ordinate of right and left lane pixels are determined, we use Curve fitting to obtain the polynomial.</p>
+Now x and y co ordinate of right and left lane pixels are determined, we use Curve fitting to obtain the polynomial.
+<img src="/Advance_lane_detection/assets/images/lane_detect.png" width="480px" /></p>
 <div class="code-block"> 
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">extract_lanes_pixels</span><span class="p">(</span><span class="n">binary_warped</span><span class="p">):</span>
@@ -391,8 +428,7 @@ cv2.fillPoly(color_warp, np.int_([pts]), (0,255,0))
 to fill image along curve. After this step  image is 
 inverse perspective transformed into original view plane.
 combined the result with original undistorted image.
-<img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="40px" />
-<img src="/Advance_lane_detection/assets/images/ChessBoard_9x6.jpg" width="60px" /></p>
+<img src="/Advance_lane_detection/assets/images/final.png" /></p>
 <div class="code-block">
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">plain_lane</span><span class="p">(</span><span class="n">undist</span><span class="p">,</span> <span class="n">warped</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">left_fitx</span><span class="p">,</span> <span class="n">right_fitx</span><span class="p">,</span> <span class="n">ploty</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
