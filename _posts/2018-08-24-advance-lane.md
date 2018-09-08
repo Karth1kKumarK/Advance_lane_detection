@@ -15,20 +15,19 @@ This project was inspired by Udacity's CarND-Advanced-Lane-Lines project.
   </tr>
 </table>
 ### The steps to be followed to achieve objective are:
--   calibration of rpi camera to obtain intrinsic camera parameters and distortion      coefficients.
+-   calibration of rpi camera to obtain intrinsic camera parameters and distortion coefficients.
 -  Apply distortion correction to image from rpi camera.
--  Apply color mask,ROI to image to filter out unnecessary information
--  Conversion to gray scale image and apply canny edge detection
+-  Apply the color mask and ROI to image to filter out unnecessary information
+-  Convert to grayscale image and apply canny edge detection
 -  Apply a perspective transform to get bird eye view.
 -  Detect lane pixels and fit to find the lane boundary.
 -  Warp the lane boundary back on to original image
 
 ### Rpi Camera calibration:
-The image captured is 2D representation of 3D world,Hence this transformation from 3D to 2D is not ideal, This leads to distortion in image.Therefore camera calibration is required to obtain camera matrix and Distortion coefficients.for more information 
+The image captured is a 2D representation of the 3D world, Hence this transformation from 3D to 2D is not ideal, This leads to distortion in the image. Therefore camera calibration is required to obtain camera matrix and Distortion coefficients.For more information 
 refer <a href="https://docs.opencv.org/3.1.0/dc/dbb/tutorial_py_calibration.html" target="_blank">this.</a>
 
-
-For camera calibration,I have used 7X9 checkerboard available <a href="https://www.mrpt.org/downloads/camera-calibration-checker-board_9x7.pdf" target="_blank">here</a>,capture the images of checker board in different orientation and place   them in a folder camera_01.Run the cameracalib.py(__place camera_01 in the same directory as cameracalib.py__)
+For camera calibration, I have used 7X9 checkerboard available <a href="https://www.mrpt.org/downloads/camera-calibration-checker-board_9x7.pdf" target="_blank">here</a>, capture the images of checkerboard in a different orientation and place them in a folder camera_01. Run the cameracalib.py(__place camera_01 in the same directory as cameracalib.py__)
 
 <div class="code-block">
 {% highlight python %}
@@ -93,8 +92,7 @@ print(mean_error/len(objpoints))
 {% endhighlight %}
 </div>
 
-After successful, Execution the cameraMatrix.txt and cameraDistortion.txt are saved in camera_01 folder.We will load this matrix into python space and pass them as argument 
-into __undistort__ function.
+After successful execution, the cameraMatrix.txt and cameraDistortion.txt are saved in a camera_01 folder. We will load this matrix into python space and pass them as an argument into __undistort__ function.
 {% highlight python %}
 mtx=np.loadtxt('/YOUR DIRECTORY/camera_01/cameraMatrix.txt', delimiter=',', dtype=None)
 dist=np.loadtxt('/YOUR DIRECTORY/camera_01/cameraDistortion.txt', delimiter=',', dtype=None)
@@ -128,8 +126,7 @@ def undistort(img,mtx,dist):#function for un distorting the image wrt to camera 
 
 ### Apply color mask,roi to image to filter out unnecessary information
 
-In the the current project because of the Color of the left,right lane are same.
-Hence color mask and the Region of interest)( __ROI__) is applied to the image, The information other than the ROI and bandwidth of the color mask  is eliminated.The bandwidth for the upper and lower limit of color mask was found through trail and error.
+In the current project because of the Color of the left, right lane are same. Hence color mask and the Region of interest)( ROI) is applied to the image, The information other than the ROI and bandwidth of the color mask is eliminated. The bandwidth for the upper and lower limit of the color mask was found through trial and error.
 <table style="width:100%; border:0px;">
   <tr>
     <th>Undisort image</th>
@@ -191,11 +188,9 @@ The ROI image obtained is now converted into grayscale and canny edge detection 
 greyimage=cv2.cvtColor(ROIimage, cv2.COLOR_RGB2GRAY)
 cannyimage=cv2.Canny(greyimage,100 ,80)
 {% endhighlight %}
+
 ### Apply a perspective transform to get bird eye view(BEV)
-The perspective transformation will give us top down view of the track.
-This is important for estimation of curvature radius in case of curved 
-track. To get BEV we want to select four source point's in trapezoidal shape
-which we want to get the top down view
+The perspective transformation will give us top-down view of the track. This is important for estimation of curvature radius in case of curved track. To get BEV we want to select four source point’s in trapezoidal shape which we want to get the top-down view
 <table style="width:100%; border:0px;">
   <tr>
     <th>Canny edge </th>
@@ -221,12 +216,7 @@ def birdeyeview(frame):
 {% endhighlight %}
 
 ### Detect lane pixels and fit to find the lane boundary
-The lane detection relies on extraction of lane pixel and to  fit the curve to  get the  curvature and that in turn can we used to compute steering angles.
-The approach used here is  to get histogram of the lower half of the
-image to get the range of position of pixels in the image.
-Then dividing the entire image into n(current n=9) of windows.
-Using the function __Yourimage.nonzero()__ to get x ,y co ordinates of non zero pixels is determined.In the current window with width =100,Window boundaries in x and y is determined, then within this window non zero pixel location is found.these pixels are categorized  based on the boundaries of window,Hence extracting left and right lane pixels.
-Now x and y co ordinate of right and left lane pixels are determined, we use Curve fitting to obtain the polynomial.
+The lane detection relies on the extraction of lane pixel and to fit the curve to get the curvature and that in turn can we used to compute steering angles. The approach used here is to get the histogram of the lower half of the image to get the range of the position of pixels in the image. Then dividing the entire image into n(current n=9) of windows. Using the function __image.nonzero()__ to get x, y coordinates of non zero pixels is determined. In the current window with width =100, Window boundaries in x and y are determined, then within this window non zero pixel location is found.these pixels are categorized based on the boundaries of the window, Hence extracting left and right lane pixels. Now x and y coordinate of right and left lane pixels are determined, we use Curve fitting to obtain the polynomial.
 <img src="{{ site.baseurl }}/assets/images/lane_detect.png" width="480px">
 <div class="code-block"> 
 {% highlight python %}
@@ -333,7 +323,7 @@ def poly_fit(leftx, lefty, rightx, righty, left_lane_inds, right_lane_inds, bina
 ### Warp the lane boundary back on to original image
 Now that lane curves are detected we will use 
 cv2.fillPoly(color_warp, np.int_([pts]), (0,255,0))
-to fill image along curve. After this step,Image is 
+to fill image along curve. After this step, Image is 
 inverse perspective transformed into original view plane and 
 combined with the  original undistorted image.
 <img src="{{ site.baseurl }}/assets/images/final.png">
