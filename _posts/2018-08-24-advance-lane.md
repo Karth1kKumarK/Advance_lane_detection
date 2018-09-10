@@ -15,7 +15,7 @@ This project was inspired by Udacity's CarND-Advanced-Lane-Lines project.
   </tr>
 </table>
 ### The steps to be followed to achieve objective are:
--   calibration of rpi camera to obtain intrinsic camera parameters and distortion coefficients.
+-  Calibration of rpi camera to obtain intrinsic camera parameters and distortion coefficients.
 -  Apply distortion correction to image from rpi camera.
 -  Apply the color mask and ROI to image to filter out unnecessary information
 -  Convert to grayscale image and apply canny edge detection
@@ -126,7 +126,7 @@ def undistort(img,mtx,dist):#function for un distorting the image wrt to camera 
 
 ### Apply color mask,roi to image to filter out unnecessary information
 
-In the current project because of the Color of the left, right lane are same. Hence color mask and the Region of interest)( ROI) is applied to the image, The information other than the ROI and bandwidth of the color mask is eliminated. The bandwidth for the upper and lower limit of the color mask was found through trial and error.
+Since in the current project, Color of the left and right lane are the same. Hence a single color mask and the Region of interest)( ROI) is applied to the image, The information other than the ROI and bandwidth of the color mask is eliminated. The bandwidth for the upper and lower limit of the color mask was found through trial and error.
 <table style="width:100%; border:0px;">
   <tr>
     <th>Undisort image</th>
